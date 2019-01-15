@@ -8,6 +8,7 @@ class Display
         @board = board
         @cursor = Cursor.new([0,0], board)
         # @cursor.get_input
+        
     end
 
     def render

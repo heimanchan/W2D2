@@ -7,19 +7,19 @@ class Board
         @grid = Array.new(8){[]}
         (0..1).each do |row|
             (0..7).each do |col|
-                @grid[row]<< Piece.new
+                @grid[row]<< NullPiece.instance
             end
         end
 
         (2..5).each do |row|
             (0..7).each do |col|
-                @grid[row]<< nil
+                @grid[row]<< NullPiece.instance
             end
         end
 
         (-2..-1).each do |row|
             (0..7).each do |col|
-                @grid[row]<< Piece.new
+                @grid[row]<< NullPiece.instance
             end
         end
 

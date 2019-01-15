@@ -76,10 +76,15 @@ class Cursor
     return input
   end
 
+  def toggle_selected
+    @selected = !@selected
+
+  end
+
   def handle_key(key)
     case key
     when :return, :space
-      @selected = !@selected
+      toggle_selected
       @cursor_pos
     when :ctrl_c
       exit
@@ -94,8 +99,24 @@ class Cursor
     end
   end
 
+  def valid_pos?(pos)
+    x, y = pos
+    #if x >= 8 || y >= 8 || x < 0 || y < 0
+    if x.between?(0,7) && y.between?(0,7)
+      return true
+    else
+      return false
+    end
+  end
+
   def update_pos(diff)
-    @cursor_pos = [@cursor_pos[0] + diff[0], @cursor_pos[1] + diff[1]]
+
+    new_pos = [@cursor_pos[0] + diff[0], @cursor_pos[1] + diff[1]]
+
+    if valid_pos?(new_pos)
+      @cursor_pos = new_pos
+    end 
+    
     return nil
   end
 end
