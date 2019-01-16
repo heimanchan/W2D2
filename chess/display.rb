@@ -1,7 +1,9 @@
 require_relative "cursor.rb"
 require_relative "board.rb"
+require_relative "piece.rb"
 require "colorize"
 require "colorized_string"
+require "byebug"
 
 class Display
     def initialize(board)
@@ -34,13 +36,8 @@ class Display
                 else
                     cursor_color = :light_blue
                 end
-
-                if !@board[pos].nil?
-                    print "[x]".colorize(:color => cursor_color, :background => background_color)
-                else
-                    print "[ ]".colorize(:color => cursor_color, :background => background_color)
-                end
-
+                @board[pos].to_s
+                print "[#{@board[pos].to_s}]".colorize(:color => cursor_color, :background => background_color)
             end
             puts ""
         end
@@ -56,6 +53,19 @@ end
 
 if __FILE__ == $PROGRAM_NAME
     board = Board.new
+    
+    pos = [0,0]
+    test = Rook.new(board, pos, :red)
+    friendly = Queen.new(board, [0,2], :red)
+    enemy = Bishop.new(board, [2,0], :blue)
+
     display = Display.new(board)
-    display.test_render
+
+
+
+
+
+
+    display.render
+    p test.moves
 end

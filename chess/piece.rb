@@ -20,13 +20,19 @@ module SlidingPiece
         available_moves = []
 
         directions.each do |direction|
-            p "TEST: #{direction}"
-            start_pos = pos
-            
-            while valid_pos?(start_pos)
-                next_pos =  Piece.send(direction, start_pos)
-                available_moves << next_pos if valid_pos?(next_pos)
-                start_pos = next_pos
+            puts "#{direction}"
+            next_pos = pos
+            while true 
+                next_pos =  Piece.send(direction, next_pos)
+                break unless valid_pos?(next_pos) 
+                
+                break if @board[next_pos].color == @board[pos].color #friendly
+
+                if @board[next_pos].color != @board[pos].color #enemy
+                    available_moves << next_pos 
+                    break
+                end 
+                available_moves << next_pos
             end
         end 
         available_moves
@@ -38,7 +44,6 @@ module SlidingPiece
 
         start_pos = @pos
         slopes.each do |slope|
-            p "Each slope #{slope}"
             case 
             when slope == :horizontal
                 available_moves += all_positions(start_pos, [:left, :right])
@@ -48,7 +53,7 @@ module SlidingPiece
                 available_moves += all_positions(start_pos, [:up_left, :up_right, :down_left, :down_right])
             end
         end
-
+        
         available_moves
     end
 end
@@ -63,8 +68,7 @@ class Piece
     def initialize(board, pos)
         @board = board
         @pos = pos
-        @symbol
-        @color
+        @board[pos] = self
     end
 
     def self.left(pos)
@@ -100,6 +104,17 @@ end
 
 class Bishop < Piece
     include SlidingPiece
+    include Validation
+
+    def initialize(board, position, color)
+        super(board, position)
+        @color = color
+        @symbol = "♝"
+    end
+
+    def to_s
+        @symbol.to_s
+    end
     def move_dirs
         return [:diagonal]
     end
@@ -107,9 +122,22 @@ end
 
 class Rook < Piece
     include SlidingPiece
+    include Validation
+
+    def initialize(board, position, color)
+        super(board, position)
+        @color = color
+        @symbol = "♜"
+    end
+
+    def to_s
+        # "♜"
+        @symbol.to_s
+    end
+
     def move_dirs
         return [:horizontal, :vertical]
-    end
+    end   
 end
 
 class Queen < Piece
@@ -119,10 +147,11 @@ class Queen < Piece
     def initialize(board, position, color)
         super(board, position)
         @color = color
+        @symbol = "♛"
     end
 
     def to_s
-        "♛"
+        @symbol.to_s
     end
 
     def move_dirs
@@ -131,16 +160,28 @@ class Queen < Piece
 end
 
 class NullPiece < Piece
+    attr_reader :color, :symbol
+
     include Singleton
     def initialize
+        @color
+        @symbol
+    end
 
+    def to_s
+        " "
     end
 end
 
 if __FILE__ == $PROGRAM_NAME
     board = Board.new
     pos = [0,0]
-    queen = Queen.new(board, pos, :red)
-    p queen.moves # => [[0,1], [0,2], ..., [0,7]]
+
+    test = Rook.new(board, pos, :red)
+    
+    friendly = Rook.new(board, [0,2], :red)
+
+    enemy = Rook.new(board, [2,0], :blue)
+    p test.moves
 
 end
