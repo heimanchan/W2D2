@@ -34,7 +34,7 @@ class Display
                         cursor_color = :black
                     end
                 else
-                    cursor_color = :light_blue
+                    cursor_color = @board[pos].color
                 end
                 @board[pos].to_s
                 print "[#{@board[pos].to_s}]".colorize(:color => cursor_color, :background => background_color)
@@ -60,11 +60,6 @@ if __FILE__ == $PROGRAM_NAME
     enemy = Bishop.new(board, [2,0], :blue)
 
     display = Display.new(board)
-
-
-
-
-
 
     display.render
     p test.moves

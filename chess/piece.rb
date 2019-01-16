@@ -15,7 +15,6 @@ module Validation
 end
 
 module SlidingPiece
-
     def all_positions(pos, directions)
         available_moves = []
 
@@ -27,12 +26,15 @@ module SlidingPiece
                 break unless valid_pos?(next_pos) 
                 
                 break if @board[next_pos].color == @board[pos].color #friendly
-
+                if @board[next_pos].is_a?(NullPiece)
+                    available_moves << next_pos
+                    next
+                end
                 if @board[next_pos].color != @board[pos].color #enemy
                     available_moves << next_pos 
                     break
                 end 
-                available_moves << next_pos
+                # available_moves << next_pos
             end
         end 
         available_moves
