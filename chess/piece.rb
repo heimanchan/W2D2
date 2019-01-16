@@ -61,7 +61,9 @@ module SlidingPiece
 end
 
 module SteppingPiece
-    
+    def moves
+        diffs = move_diffs
+    end
 end
 
 class Piece
@@ -158,6 +160,38 @@ class Queen < Piece
 
     def move_dirs
         return [:diagonal, :horizontal, :vertical]
+    end
+end
+
+class Knight < Piece
+
+    def initialize(board, position, color)
+        super(board, position)
+        @color = color
+        @symbol = "♞"
+    end
+
+    def to_s
+        @symbol.to_s
+    end
+
+    def move_diffs
+    end
+end
+
+class King < Piece
+    def initialize(board, position, color)
+        super(board, position)
+        @color = color
+        @symbol = "♚"
+    end
+
+    def to_s
+        @symbol.to_s
+    end
+
+    def move_diffs
+        [[0, -1],[0, 1],[-1, 0], [1, 0],[-1,-1],[-1,1],[1,-1],[1,1]]
     end
 end
 
